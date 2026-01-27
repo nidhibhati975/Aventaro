@@ -400,6 +400,10 @@ async def get_my_trips(current_user: str = Depends(get_current_user)):
         ]
     }).to_list(length=100)
     
+    # Remove MongoDB ObjectId from all trips
+    for trip in trips:
+        trip.pop('_id', None)
+    
     created = [t for t in trips if t['creator_id'] == current_user]
     joined = [t for t in trips if t['creator_id'] != current_user and current_user in t['members']]
     
