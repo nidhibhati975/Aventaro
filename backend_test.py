@@ -571,9 +571,6 @@ class AventaroAPITester:
                     self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {status_code} (via curl)")
         except Exception as e:
             self.log_result("Invalid Signup Data", False, f"Exception: {str(e)}")
-                self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {response.status_code if response else 'No response'}")
-        except Exception as e:
-            self.log_result("Invalid Signup Data", False, f"Exception: {str(e)}")
     
     def run_all_tests(self):
         """Run all tests"""
