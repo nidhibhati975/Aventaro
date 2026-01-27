@@ -96,6 +96,7 @@ class AventaroAPITester:
                     if "token" in data and "user" in data:
                         self.tokens[f"user_{i+1}"] = data["token"]
                         self.user_ids[f"user_{i+1}"] = data["user"]["id"]
+                        print(f"DEBUG: User {i+1} token: {data['token'][:50]}...")
                         self.log_result(f"Signup User {i+1}", True, f"User created successfully")
                     else:
                         self.log_result(f"Signup User {i+1}", False, "Missing token or user in response", data)
