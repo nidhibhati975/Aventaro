@@ -501,27 +501,36 @@ class AventaroAPITester:
         print("\n=== Testing Error Cases ===")
         
         # Test unauthorized access
-        response = self.make_request("GET", "/auth/me")
-        if response and response.status_code == 401:
-            self.log_result("Unauthorized Access", True, "Correctly returns 401 for missing auth")
-        else:
-            self.log_result("Unauthorized Access", False, f"Expected 401, got {response.status_code if response else 'No response'}")
+        try:
+            response = self.make_request("GET", "/auth/me")
+            if response and response.status_code == 401:
+                self.log_result("Unauthorized Access", True, "Correctly returns 401 for missing auth")
+            else:
+                self.log_result("Unauthorized Access", False, f"Expected 401, got {response.status_code if response else 'No response'}")
+        except Exception as e:
+            self.log_result("Unauthorized Access", False, f"Exception: {str(e)}")
         
         # Test invalid token
-        headers = {"Authorization": "Bearer invalid_token"}
-        response = self.make_request("GET", "/auth/me", headers=headers)
-        if response and response.status_code == 401:
-            self.log_result("Invalid Token", True, "Correctly returns 401 for invalid token")
-        else:
-            self.log_result("Invalid Token", False, f"Expected 401, got {response.status_code if response else 'No response'}")
+        try:
+            headers = {"Authorization": "Bearer invalid_token"}
+            response = self.make_request("GET", "/auth/me", headers=headers)
+            if response and response.status_code == 401:
+                self.log_result("Invalid Token", True, "Correctly returns 401 for invalid token")
+            else:
+                self.log_result("Invalid Token", False, f"Expected 401, got {response.status_code if response else 'No response'}")
+        except Exception as e:
+            self.log_result("Invalid Token", False, f"Exception: {str(e)}")
         
         # Test invalid signup data
-        invalid_data = {"email": "invalid-email", "password": "123"}
-        response = self.make_request("POST", "/auth/signup", invalid_data)
-        if response and response.status_code in [400, 422]:
-            self.log_result("Invalid Signup Data", True, f"Correctly returns {response.status_code} for invalid data")
-        else:
-            self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {response.status_code if response else 'No response'}")
+        try:
+            invalid_data = {"email": "invalid-email", "password": "123"}
+            response = self.make_request("POST", "/auth/signup", invalid_data)
+            if response and response.status_code in [400, 422]:
+                self.log_result("Invalid Signup Data", True, f"Correctly returns {response.status_code} for invalid data")
+            else:
+                self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {response.status_code if response else 'No response'}")
+        except Exception as e:
+            self.log_result("Invalid Signup Data", False, f"Exception: {str(e)}")
     
     def run_all_tests(self):
         """Run all tests"""
