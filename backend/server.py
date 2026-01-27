@@ -285,6 +285,7 @@ async def discover_users(current_user: str = Depends(get_current_user), skip: in
     
     for user in users:
         user.pop('password_hash', None)
+        user.pop('_id', None)  # Remove MongoDB ObjectId
     
     return users
 
