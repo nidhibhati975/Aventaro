@@ -382,9 +382,11 @@ async def discover_trips(current_user: str = Depends(get_current_user), skip: in
     
     # Populate creator data
     for trip in trips:
+        trip.pop('_id', None)  # Remove MongoDB ObjectId
         creator = await db.users.find_one({"id": trip['creator_id']})
         if creator:
             creator.pop('password_hash', None)
+            creator.pop('_id', None)  # Remove MongoDB ObjectId
             trip['creator'] = creator
     
     return trips
