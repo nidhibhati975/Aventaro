@@ -11,7 +11,7 @@ from datetime import datetime
 import uuid
 
 # Configuration
-BASE_URL = "http://localhost/api"
+BASE_URL = "http://localhost:8001/api"
 TEST_USERS = [
     {
         "email": "emma@test.com",
