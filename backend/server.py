@@ -355,13 +355,23 @@ async def accept_friend_request(request_id: str, current_user: str = Depends(get
 # =====================
 
 @api_router.post("/trips")
-async def create_trip(trip_data: Trip, current_user: str = Depends(get_current_user)):
-    trip_data.creator_id = current_user
-    trip_data.members = [current_user]
+async def create_trip(trip_data: TripCreate, current_user: str = Depends(get_current_user)):
+    trip = Trip(
+        creator_id=current_user,
+        destination=trip_data.destination,
+        start_date=trip_data.start_date,
+        end_date=trip_data.end_date,
+        budget_range=trip_data.budget_range,
+        trip_type=trip_data.trip_type,
+        max_members=trip_data.max_members,
+        itinerary=trip_data.itinerary,
+        trip_image=trip_data.trip_image,
+        members=[current_user]
+    )
     
-    await db.trips.insert_one(trip_data.dict())
+    await db.trips.insert_one(trip.dict())
     
-    return trip_data
+    return trip
 
 @api_router.get("/trips/discover")
 async def discover_trips(current_user: str = Depends(get_current_user), skip: int = 0, limit: int = 20):
