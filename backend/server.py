@@ -126,6 +126,16 @@ class Trip(BaseModel):
     boost_expires_at: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+class TripCreate(BaseModel):
+    destination: str
+    start_date: str
+    end_date: str
+    budget_range: str
+    trip_type: str
+    max_members: int
+    itinerary: str
+    trip_image: Optional[str] = None
+
 class FriendRequest(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     from_user_id: str
