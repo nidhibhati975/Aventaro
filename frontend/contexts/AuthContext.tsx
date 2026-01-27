@@ -1,9 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import Constants from 'expo-constants';
 
-const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'http://localhost';
+const API_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL || 'http://localhost'}/api`;
 
 interface User {
   id: string;
@@ -59,30 +58,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (login: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/api/auth/signin`, { login, password });
+      console.log('Signing in to:', `${API_URL}/auth/signin`);
+      const response = await axios.post(`${API_URL}/auth/signin`, { login, password });
       const { token: newToken, user: newUser } = response.data;
 
+      console.log('Sign in successful, storing token...');
       await AsyncStorage.setItem('auth_token', newToken);
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
 
       setToken(newToken);
       setUser(newUser);
+      console.log('User set:', newUser);
     } catch (error: any) {
+      console.error('Sign in error:', error);
       throw new Error(error.response?.data?.detail || 'Sign in failed');
     }
   };
 
   const signUp = async (userData: any) => {
     try {
-      const response = await axios.post(`${API_URL}/api/auth/signup`, userData);
+      console.log('Signing up to:', `${API_URL}/auth/signup`);
+      const response = await axios.post(`${API_URL}/auth/signup`, userData);
       const { token: newToken, user: newUser } = response.data;
 
+      console.log('Sign up successful, storing token...');
       await AsyncStorage.setItem('auth_token', newToken);
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
 
       setToken(newToken);
       setUser(newUser);
+      console.log('User set:', newUser);
     } catch (error: any) {
+      console.error('Sign up error:', error);
       throw new Error(error.response?.data?.detail || 'Sign up failed');
     }
   };
