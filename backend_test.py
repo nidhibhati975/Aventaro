@@ -503,10 +503,23 @@ class AventaroAPITester:
         # Test unauthorized access
         try:
             response = self.make_request("GET", "/auth/me")
-            if response and response.status_code == 401:
-                self.log_result("Unauthorized Access", True, "Correctly returns 401 for missing auth")
+            if response is not None:
+                if response.status_code == 401:
+                    self.log_result("Unauthorized Access", True, "Correctly returns 401 for missing auth")
+                else:
+                    self.log_result("Unauthorized Access", False, f"Expected 401, got {response.status_code}")
             else:
-                self.log_result("Unauthorized Access", False, f"Expected 401, got {response.status_code if response else 'No response'}")
+                # Try direct curl as fallback
+                import subprocess
+                result = subprocess.run(
+                    ['curl', '-s', '-w', '\\n%{http_code}', f'{BASE_URL}/auth/me'],
+                    capture_output=True, text=True, timeout=5
+                )
+                status_code = result.stdout.strip().split('\\n')[-1]
+                if status_code == '401':
+                    self.log_result("Unauthorized Access", True, "Correctly returns 401 for missing auth (via curl)")
+                else:
+                    self.log_result("Unauthorized Access", False, f"Expected 401, got {status_code} (via curl)")
         except Exception as e:
             self.log_result("Unauthorized Access", False, f"Exception: {str(e)}")
         
@@ -514,10 +527,23 @@ class AventaroAPITester:
         try:
             headers = {"Authorization": "Bearer invalid_token"}
             response = self.make_request("GET", "/auth/me", headers=headers)
-            if response and response.status_code == 401:
-                self.log_result("Invalid Token", True, "Correctly returns 401 for invalid token")
+            if response is not None:
+                if response.status_code == 401:
+                    self.log_result("Invalid Token", True, "Correctly returns 401 for invalid token")
+                else:
+                    self.log_result("Invalid Token", False, f"Expected 401, got {response.status_code}")
             else:
-                self.log_result("Invalid Token", False, f"Expected 401, got {response.status_code if response else 'No response'}")
+                # Try direct curl as fallback
+                import subprocess
+                result = subprocess.run(
+                    ['curl', '-s', '-w', '\\n%{http_code}', '-H', 'Authorization: Bearer invalid_token', f'{BASE_URL}/auth/me'],
+                    capture_output=True, text=True, timeout=5
+                )
+                status_code = result.stdout.strip().split('\\n')[-1]
+                if status_code == '401':
+                    self.log_result("Invalid Token", True, "Correctly returns 401 for invalid token (via curl)")
+                else:
+                    self.log_result("Invalid Token", False, f"Expected 401, got {status_code} (via curl)")
         except Exception as e:
             self.log_result("Invalid Token", False, f"Exception: {str(e)}")
         
@@ -525,9 +551,26 @@ class AventaroAPITester:
         try:
             invalid_data = {"email": "invalid-email", "password": "123"}
             response = self.make_request("POST", "/auth/signup", invalid_data)
-            if response and response.status_code in [400, 422]:
-                self.log_result("Invalid Signup Data", True, f"Correctly returns {response.status_code} for invalid data")
+            if response is not None:
+                if response.status_code in [400, 422]:
+                    self.log_result("Invalid Signup Data", True, f"Correctly returns {response.status_code} for invalid data")
+                else:
+                    self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {response.status_code}")
             else:
+                # Try direct curl as fallback
+                import subprocess
+                result = subprocess.run(
+                    ['curl', '-s', '-w', '\\n%{http_code}', '-X', 'POST', '-H', 'Content-Type: application/json',
+                     '-d', '{"email":"invalid"}', f'{BASE_URL}/auth/signup'],
+                    capture_output=True, text=True, timeout=5
+                )
+                status_code = result.stdout.strip().split('\\n')[-1]
+                if status_code in ['400', '422']:
+                    self.log_result("Invalid Signup Data", True, f"Correctly returns {status_code} for invalid data (via curl)")
+                else:
+                    self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {status_code} (via curl)")
+        except Exception as e:
+            self.log_result("Invalid Signup Data", False, f"Exception: {str(e)}")
                 self.log_result("Invalid Signup Data", False, f"Expected 400/422, got {response.status_code if response else 'No response'}")
         except Exception as e:
             self.log_result("Invalid Signup Data", False, f"Exception: {str(e)}")
