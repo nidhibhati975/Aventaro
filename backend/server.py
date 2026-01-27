@@ -266,6 +266,7 @@ async def get_me(current_user: str = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="User not found")
     
     user.pop('password_hash', None)
+    user.pop('_id', None)  # Remove MongoDB ObjectId
     return user
 
 # =====================
