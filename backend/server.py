@@ -315,9 +315,11 @@ async def get_friend_requests(current_user: str = Depends(get_current_user)):
     
     # Populate user data
     for request in requests:
+        request.pop('_id', None)  # Remove MongoDB ObjectId
         user = await db.users.find_one({"id": request['from_user_id']})
         if user:
             user.pop('password_hash', None)
+            user.pop('_id', None)  # Remove MongoDB ObjectId
             request['user'] = user
     
     return requests
