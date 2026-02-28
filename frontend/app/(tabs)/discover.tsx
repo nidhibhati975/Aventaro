@@ -34,11 +34,11 @@ export default function Discover() {
     setLoading(true);
     try {
       if (activeTab === 'people') {
-        const response = await api.get('/api/users/discover');
+        const response = await api.get('/users/discover');
         setPeople(response.data);
         setCurrentIndex(0);
       } else {
-        const response = await api.get('/api/trips/discover');
+        const response = await api.get('/trips/discover');
         setTrips(response.data);
         setCurrentIndex(0);
       }
