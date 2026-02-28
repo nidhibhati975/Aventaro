@@ -145,7 +145,7 @@ export default function Booking() {
       }
       
       const response = await api.get(
-        `/api/booking/search/${serviceType}?${params.toString()}`
+        `/booking/search/${serviceType}?${params.toString()}`
       );
       
       const { results, total, has_more } = response.data;
