@@ -38,7 +38,7 @@ export default function Trips() {
   const loadTrips = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/api/trips/my-trips');
+      const response = await api.get('/trips/my-trips');
       setCreatedTrips(response.data.created || []);
       setJoinedTrips(response.data.joined || []);
     } catch (error) {
@@ -55,7 +55,7 @@ export default function Trips() {
     }
 
     try {
-      await api.post('/api/trips', {
+      await api.post('/trips', {
         destination,
         start_date: startDate,
         end_date: endDate,

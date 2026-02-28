@@ -70,14 +70,14 @@ export default function Discover() {
     try {
       if (activeTab === 'people') {
         const person = people[currentIndex];
-        await api.post(`/api/users/friend-request?to_user_id=${person.id}`);
+        await api.post(`/users/friend-request?to_user_id=${person.id}`);
         Alert.alert('Success', 'Friend request sent!');
         if (currentIndex < people.length - 1) {
           setCurrentIndex(currentIndex + 1);
         }
       } else {
         const trip = trips[currentIndex];
-        await api.post(`/api/trips/${trip.id}/join-request`);
+        await api.post(`/trips/${trip.id}/join-request`);
         Alert.alert('Success', 'Trip join request sent!');
         if (currentIndex < trips.length - 1) {
           setCurrentIndex(currentIndex + 1);

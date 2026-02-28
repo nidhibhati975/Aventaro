@@ -27,17 +27,17 @@ export default function Matches() {
     setLoading(true);
     try {
       if (activeTab === 'friend') {
-        const response = await api.get('/api/users/friend-requests');
+        const response = await api.get('/users/friend-requests');
         setFriendRequests(response.data);
       } else {
         // Load trip requests (trips where current user is creator)
-        const myTrips = await api.get('/api/trips/my-trips');
+        const myTrips = await api.get('/trips/my-trips');
         const created = myTrips.data.created || [];
         const allRequests: any[] = [];
         
         for (const trip of created) {
           if (trip.pending_requests && trip.pending_requests.length > 0) {
-            const requests = await api.get(`/api/trips/${trip.id}/requests`);
+            const requests = await api.get(`/trips/${trip.id}/requests`);
             allRequests.push(...requests.data.map((user: any) => ({ ...user, trip })));
           }
         }
@@ -52,7 +52,7 @@ export default function Matches() {
 
   const handleAcceptFriend = async (requestId: string) => {
     try {
-      await api.post(`/api/users/friend-request/${requestId}/accept`);
+      await api.post(`/users/friend-request/${requestId}/accept`);
       Alert.alert('Success', 'Friend request accepted!');
       loadData();
     } catch (error: any) {
@@ -62,7 +62,7 @@ export default function Matches() {
 
   const handleApproveTripRequest = async (tripId: string, userId: string) => {
     try {
-      await api.post(`/api/trips/${tripId}/approve/${userId}`);
+      await api.post(`/trips/${tripId}/approve/${userId}`);
       Alert.alert('Success', 'Trip request approved!');
       loadData();
     } catch (error: any) {

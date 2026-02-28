@@ -33,9 +33,9 @@ export default function Profile() {
     setLoading(true);
     try {
       const [userResponse, walletResponse, referralResponse] = await Promise.all([
-        api.get('/api/auth/me'),
-        api.get('/api/wallet/balance'),
-        api.get('/api/referral/code'),
+        api.get('/auth/me'),
+        api.get('/wallet/balance'),
+        api.get('/referral/code'),
       ]);
 
       setUserData(userResponse.data);
