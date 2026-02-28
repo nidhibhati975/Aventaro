@@ -783,9 +783,6 @@ async def get_messages(conversation_id: str, current_user: str = Depends(get_cur
     
     return list(reversed(messages))
 
-# Include routers
-app.include_router(api_router)
-
 # =====================
 # BOOKING MODULE INTEGRATION (NON-BREAKING ADDITION)
 # =====================
@@ -797,6 +794,9 @@ except ImportError as e:
     logging.warning(f"⚠️  Booking module not available: {e}")
 except Exception as e:
     logging.error(f"❌ Booking module integration failed: {e}")
+
+# Include routers (MUST be after all sub-routers are added)
+app.include_router(api_router)
 
 # Wrap with Socket.IO
 socketio_asgi_app = socketio.ASGIApp(sio, app, socketio_path='/socket.io')
