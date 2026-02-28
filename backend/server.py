@@ -795,6 +795,42 @@ except ImportError as e:
 except Exception as e:
     logging.error(f"❌ Booking module integration failed: {e}")
 
+# =====================
+# PAYMENT MODULE INTEGRATION
+# =====================
+try:
+    from payment_routes import payment_router
+    api_router.include_router(payment_router)
+    logging.info("✅ Payment module integrated successfully")
+except ImportError as e:
+    logging.warning(f"⚠️  Payment module not available: {e}")
+except Exception as e:
+    logging.error(f"❌ Payment module integration failed: {e}")
+
+# =====================
+# AFFILIATE MODULE INTEGRATION
+# =====================
+try:
+    from affiliate_routes import affiliate_router
+    api_router.include_router(affiliate_router)
+    logging.info("✅ Affiliate module integrated successfully")
+except ImportError as e:
+    logging.warning(f"⚠️  Affiliate module not available: {e}")
+except Exception as e:
+    logging.error(f"❌ Affiliate module integration failed: {e}")
+
+# =====================
+# CHAT MODULE INTEGRATION
+# =====================
+try:
+    from chat_routes import chat_router
+    api_router.include_router(chat_router)
+    logging.info("✅ Chat module integrated successfully")
+except ImportError as e:
+    logging.warning(f"⚠️  Chat module not available: {e}")
+except Exception as e:
+    logging.error(f"❌ Chat module integration failed: {e}")
+
 # Include routers (MUST be after all sub-routers are added)
 app.include_router(api_router)
 
